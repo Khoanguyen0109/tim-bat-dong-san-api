@@ -36,3 +36,28 @@ export async function getLitsBDS(req, res, next) {
   }
   return res.status(200).json({ data: data.map((item) => item.toObject()), total });
 }
+
+export async function getBDSDetail(req, res, next) {
+  const { id } = req.params;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(422).json({ errors: errors.array() });
+    return;
+  }
+  const sheet = (await getDoc('bds')) as GoogleSpreadsheetWorksheet;
+
+  const array = await sheet.getRows();
+  const doc = array.find((item) => item.get('id') === id);
+  if (!doc) {
+    return res.status(404).json({ message: 'Not Found' });
+  }
+  return res.status(200).json({
+    data: {
+      ...doc.toObject(),
+      image: doc
+        .get('image')
+        .split(',')
+        .map((item) => ({ image: item })),
+    },
+  });
+}
