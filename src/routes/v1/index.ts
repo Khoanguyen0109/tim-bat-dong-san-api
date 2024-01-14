@@ -1,22 +1,13 @@
 import { Router } from 'express';
 
-import categories from './categories';
-import products from './products';
-import orders from './orders';
 import users from './users';
-import carts from './carts';
+
 import banners from './banners';
-import bank from './bank';
 
 const router = Router();
 
-router.use('/categories', categories);
-router.use('/products', products);
-router.use('/orders', orders);
 router.use('/users', users);
-router.use('/users', carts);
-router.use('/banners', banners);
 
-router.use('/bank-info', bank);
+router.use('/banners', banners);
 
 export default router;
