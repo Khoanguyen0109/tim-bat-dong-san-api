@@ -1,4 +1,26 @@
 export type TBds = {
   id: string;
-  title: string;
+  name: string;
+  id_danh_muc?: string;
+  mo_ta_thumbnail?: string;
+  mo_ta_chi_tiet: string;
+  image: string[];
+  youtube_embbed?: string;
+  dia_chi: string;
+  tinh: string;
+  quan: string;
+  huyen: string;
+  gia: string;
+  gia_m2: string;
+  loai_hinh_bds?: string;
+  loai_hinh_kinh_doanh?: string;
+  dien_tich: string;
+  rong: string;
+  dai: string;
+  so_phong_ngu: string;
+  so_nha_ve_sinh: string;
+  do_moi: string;
+  phap_ly: string;
+  huong: string;
+  ket_cau: string;
 };
