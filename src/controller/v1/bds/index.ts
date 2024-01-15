@@ -33,7 +33,10 @@ export async function getLitsBDS(req, res, next) {
         break;
     }
   }
-  return res.status(200).json({ data: data.map((item) => item.toObject()), total });
+  return res.status(200).json({
+    data: data.map((item) => ({ ...item.toObject(), user_liked_ids: item.get('user_liked_ids').split(',') })),
+    total,
+  });
 }
 
 export async function getBDSDetail(req, res, next) {
