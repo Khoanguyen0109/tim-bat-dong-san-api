@@ -9,8 +9,7 @@ export async function getLitsBDS(req, res, next) {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res.status(422).json({ errors: errors.array() });
-    return;
+    return res.status(422).json({ errors: errors.array() });
   }
 
   const sheet = (await getDoc('bds')) as GoogleSpreadsheetWorksheet;
