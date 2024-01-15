@@ -1,4 +1,4 @@
-import { getSettings } from 'controller/v1/settings';
+import { getSettings } from 'controller/v1/settings-custom';
 import { Router } from 'express';
 import expressAsyncHandler from 'express-async-handler';
 

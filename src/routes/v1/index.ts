@@ -13,6 +13,6 @@ router.use('/users', users);
 router.use('/bds', bds);
 router.use('/banners', banners);
 router.use('/services', services);
-// router.use('/settings', settings);
+router.use('/settings', settings);
 
 export default router;
