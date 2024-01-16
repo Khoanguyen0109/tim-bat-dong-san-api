@@ -7,6 +7,7 @@ import bds from './bds';
 import services from './services';
 import settings from './settings-custom';
 import projects from './projects';
+import categories from './categories';
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use('/banners', banners);
 router.use('/services', services);
 router.use('/settings', settings);
 router.use('/project', projects);
+router.use('/categories', categories);
 
 export default router;
