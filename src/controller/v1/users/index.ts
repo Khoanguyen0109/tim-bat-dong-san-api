@@ -9,8 +9,11 @@ import getCurrentDateWithTimezone from 'utils/getCurrentDayFormatTimezone';
 export async function getUserInfo(req, res, next) {
   const { userId } = req.params;
   const sheet = (await getDoc('users')) as GoogleSpreadsheetWorksheet;
-  const data = (await sheet.getRows()).find((item) => item.get('id') === userId).toObject();
-  return res.status(200).json({ data });
+  const data = (await sheet.getRows()).find((item) => item.get('id') === userId);
+  if (!data) {
+    return res.status(404);
+  }
+  return res.status(200).json({ data: data.toObject() });
 }
 
 export async function updateFollowed(req, res, next) {
