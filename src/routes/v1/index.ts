@@ -16,7 +16,7 @@ router.use('/bds', bds);
 router.use('/banners', banners);
 router.use('/services', services);
 router.use('/settings', settings);
-router.use('/project', projects);
+router.use('/projects', projects);
 router.use('/categories', categories);
 
 export default router;
