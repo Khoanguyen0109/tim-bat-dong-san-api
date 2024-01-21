@@ -7,7 +7,7 @@ const router = Router();
 router.get('/:userId', expressAsyncHandler(getUserInfo));
 router.put('/:userId/update_followed', expressAsyncHandler(updateFollowed));
 
-router.get(':/userId/favorites', expressAsyncHandler(getListFavorite));
-router.post(':/userId/favorites', expressAsyncHandler(updateFavorites) )
+router.get('/:userId/favorites', expressAsyncHandler(getListFavorite));
+router.post('/:userId/favorites', expressAsyncHandler(updateFavorites));
 
 export default router;
