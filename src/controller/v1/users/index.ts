@@ -21,7 +21,7 @@ export async function updateFollowed(req, res, next) {
   const sheet = (await getDoc('users')) as GoogleSpreadsheetWorksheet;
   const rows = await sheet.getRows();
   const dataIndex = rows.findIndex((item) => item.get('id') === userId && !item.get('followed'));
-  if (dataIndex) {
+  if (dataIndex!== -1) {
     rows[dataIndex].set('followed', true);
     await rows[dataIndex].save();
   }
