@@ -8,6 +8,7 @@ import services from './services';
 import settings from './settings-custom';
 import projects from './projects';
 import categories from './categories';
+import notifications from './notifications';
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use('/services', services);
 router.use('/settings', settings);
 router.use('/projects', projects);
 router.use('/categories', categories);
+router.use('/notification', notifications);
 
 export default router;
