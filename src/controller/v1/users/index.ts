@@ -47,12 +47,12 @@ export async function updateFavorites(req, res, next) {
   if (dataIndex !== -1) {
     await rows[dataIndex].delete();
   } else {
-    const { name, id_danh_muc, mo_ta_thumbnail, mo_ta_chi_tiet, dia_chi, tinh, quan, huyen, gia } = bds;
+    const { tieu_de, id_danh_muc, mo_ta_thumbnail, mo_ta_chi_tiet, dia_chi, tinh, quan, huyen, gia } = bds;
     const newFavorites = {
       id: uuidv4(),
       user_id: userId,
       bds_id: bds.id,
-      name,
+      tieu_de,
       id_danh_muc,
       mo_ta_thumbnail,
       mo_ta_chi_tiet,
