@@ -4,17 +4,16 @@ import { getDoc } from 'services/sheet';
 import { fullTextSearch } from 'utils';
 import { isNumber } from 'lodash';
 import { parseNumber } from 'utils/parseNumber';
+import { parseString } from 'utils/parseString';
 
 export async function getLitsBDS(req, res, next) {
   const { tieu_de, loai_hinh_bds, quan, tinh, huyen, min_gia, max_gia, dien_tich, offset, limit } = req.query;
   const errors = validationResult(req);
-  console.log('quan', quan);
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
   }
 
   const sheet = (await getDoc('bds')) as GoogleSpreadsheetWorksheet;
-  const rows = await sheet.getRows();
   let total = sheet?.gridProperties?.rowCount - 1;
   let data = [];
   if (isNumber(offset) && isNumber(limit)) {
@@ -27,24 +26,23 @@ export async function getLitsBDS(req, res, next) {
     }
 
     if (loai_hinh_bds) {
-      data = data.filter((item) => item.get('loai_hinh_bds').trim() === loai_hinh_bds.trim());
+      data = data.filter((item) => parseString(item.get('loai_hinh_bds')) === parseString(loai_hinh_bds));
     }
     if (quan) {
-      data = data.filter((item) => item.get('quan').trim() === quan.trim());
+      data = data.filter((item) => parseString(item.get('quan')) === parseString(quan));
     }
     if (tinh) {
-      data = data.filter((item) => item.get('tinh').trim() === tinh.trim());
+      data = data.filter((item) => parseString(item.get('tinh')) === parseString(tinh));
     }
     if (huyen) {
-      data = data.filter((item) => item.get('huyen').trim() === huyen.trim());
+      data = data.filter((item) => parseString(item.get('huyen')) === parseString(huyen));
     }
     if (dien_tich) {
-      data = data.filter((item) => item.get('dien_tich').trim() === dien_tich);
+      data = data.filter((item) => parseString(item.get('dien_tich')) === parseString(dien_tich));
     }
 
     if (min_gia) {
       data = data.filter((item) => {
-        console.log('pa', parseNumber(item.get('gia')));
         return parseNumber(item.get('gia')) >= parseFloat(min_gia);
       });
     }
