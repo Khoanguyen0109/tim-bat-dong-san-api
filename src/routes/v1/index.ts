@@ -19,6 +19,6 @@ router.use('/services', services);
 router.use('/settings', settings);
 router.use('/projects', projects);
 router.use('/categories', categories);
-router.use('/notification', notifications);
+router.use('/notifications', notifications);
 
 export default router;
