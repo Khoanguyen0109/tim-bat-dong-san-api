@@ -10,7 +10,6 @@ export async function getUserInfo(req, res, next) {
   const { userId } = req.params;
   const sheet = (await getDoc('users')) as GoogleSpreadsheetWorksheet;
   const data = (await sheet.getRows()).find((item) => item.get('id') === userId);
-  console.log('data', data);
   if (!data) {
     return res.status(404).json({ message: 'not found' });
   }
@@ -38,31 +37,20 @@ export async function getListFavorite(req, res, next) {
 
 export async function updateFavorites(req, res, next) {
   const { userId } = req.params;
-  console.log('userId', userId)
+  console.log('userId', userId);
 
   const { bds } = req.body;
-  const sheet = (await getDoc('danh_muc_yeu_thich')) as GoogleSpreadsheetWorksheet;
+  const sheet = (await getDoc('bds')) as GoogleSpreadsheetWorksheet;
   const rows = await sheet.getRows();
-  const dataIndex = rows.findIndex((item) => item.get('user_id') === userId && item.get('bds_id') === bds.id);
-  if (dataIndex !== -1) {
-    await rows[dataIndex].delete();
+  const dataIndex = rows.findIndex((item) => item.get('id') === bds.id);
+  const userLiked = rows[dataIndex].get('user_liked_ids')?.split(',');
+  console.log('userLiked', userLiked)
+  if (userLiked.includes(userId)) {
+    rows[dataIndex].set('user_liked_ids', userLiked.filter((item) => item !== userId).join(','));
   } else {
-    const { tieu_de, id_danh_muc, mo_ta_thumbnail, mo_ta_chi_tiet, dia_chi, tinh, quan, huyen, gia } = bds;
-    const newFavorites = {
-      id: uuidv4(),
-      user_id: userId,
-      bds_id: bds.id,
-      tieu_de,
-      id_danh_muc,
-      mo_ta_thumbnail,
-      mo_ta_chi_tiet,
-      dia_chi,
-      tinh,
-      quan,
-      huyen,
-      gia,
-    };
-    await sheet.addRow(newFavorites);
+    rows[dataIndex].set('user_liked_ids', [...userLiked, userId].join(','));
   }
+  await rows[dataIndex].save(); // save updates on a row
+
   return res.status(200).json({ message: 'success' });
 }
