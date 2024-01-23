@@ -20,7 +20,7 @@ export async function getLitsBDS(req, res, next) {
     data = await sheet.getRows({ offset: offset, limit: limit });
   } else {
     const array = await sheet.getRows();
-    let data = array;
+    data = array;
     if (tieu_de) {
       data = fullTextSearch(array, tieu_de, 'tieu_de');
     }
