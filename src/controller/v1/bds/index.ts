@@ -77,10 +77,8 @@ export async function getBDSDetail(req, res, next) {
   return res.status(200).json({
     data: {
       ...doc.toObject(),
-      image: doc
-        .get('image')
-        .split(',')
-        .map((item) => ({ image: item })),
+      user_liked_ids: doc.get('user_liked_ids').split(','),
+      image: doc.get('image').split(','),
     },
   });
 }
