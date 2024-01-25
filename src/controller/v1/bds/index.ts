@@ -55,7 +55,11 @@ export async function getLitsBDS(req, res, next) {
     total = data.length;
   }
   return res.status(200).json({
-    data: data.map((item) => ({ ...item.toObject(), user_liked_ids: item.get('user_liked_ids').split(',') })),
+    data: data.map((item) => ({
+      ...item.toObject(),
+      image: item.get('image').split(','),
+      user_liked_ids: item.get('user_liked_ids').split(','),
+    })),
     total,
   });
 }

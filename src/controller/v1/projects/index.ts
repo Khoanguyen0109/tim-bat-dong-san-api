@@ -5,7 +5,12 @@ import { getDoc } from 'services/sheet';
 export async function getProjects(req, res, next) {
   const sheet = (await getDoc('du_an')) as GoogleSpreadsheetWorksheet;
   const data = (await sheet.getRows()).map((item) => item.toObject());
-  return res.status(200).json({ data });
+  return res.status(200).json({
+    data: data.map((item) => ({
+      ...item.toObject(),
+      image: item.get('image').split(','),
+    })),
+  });
 }
 
 export async function getProjectDetail(req, res, next) {
