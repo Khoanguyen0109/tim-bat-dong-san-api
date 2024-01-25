@@ -4,7 +4,7 @@ import { getDoc } from 'services/sheet';
 
 export async function getProjects(req, res, next) {
   const sheet = (await getDoc('du_an')) as GoogleSpreadsheetWorksheet;
-  const data = (await sheet.getRows()).map((item) => item.toObject());
+  const data = await sheet.getRows();
   return res.status(200).json({
     data: data.map((item) => ({
       ...item.toObject(),
