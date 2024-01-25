@@ -29,13 +29,13 @@ export async function getLitsBDS(req, res, next) {
       data = data.filter((item) => parseString(item.get('loai_hinh_bds')) === parseString(loai_hinh_bds));
     }
     if (quan) {
-      data = data.filter((item) => parseString(item.get('quan')) === parseString(quan));
+      data = data.filter((item) => quan.find((item) => parseString(item) === parseString(item.get('quan'))));
     }
     if (tinh) {
-      data = data.filter((item) => parseString(item.get('tinh')) === parseString(tinh));
+      data = data.filter((item) => tinh.find((item) => parseString(item) === parseString(item.get('tinh'))));
     }
     if (huyen) {
-      data = data.filter((item) => parseString(item.get('huyen')) === parseString(huyen));
+      data = data.filter((item) => huyen.find((item) => parseString(item) === parseString(item.get('huyen'))));
     }
     if (dien_tich) {
       data = data.filter((item) => parseString(item.get('dien_tich')) === parseString(dien_tich));
@@ -54,6 +54,57 @@ export async function getLitsBDS(req, res, next) {
   if (!offset || !limit) {
     total = data.length;
   }
+  return res.status(200).json({
+    data: data.map((item) => ({
+      ...item.toObject(),
+      image: item.get('image').split(','),
+      user_liked_ids: item.get('user_liked_ids').split(','),
+    })),
+    total,
+  });
+}
+
+export async function getLitsBDSFilter(req, res, next) {
+  const { tieu_de, loai_hinh_bds, quan, tinh, huyen, min_gia, max_gia, dien_tich } = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+
+  const sheet = (await getDoc('bds')) as GoogleSpreadsheetWorksheet;
+  let total = sheet?.gridProperties?.rowCount - 1;
+  let data = [];
+  const array = await sheet.getRows();
+  data = array;
+  if (tieu_de) {
+    data = fullTextSearch(array, tieu_de, 'tieu_de');
+  }
+
+  if (loai_hinh_bds) {
+    data = data.filter((item) => parseString(item.get('loai_hinh_bds')) === parseString(loai_hinh_bds));
+  }
+  if (quan) {
+    data = data.filter((item) => quan.find((q) => parseString(q) === parseString(item.get('quan'))));
+  }
+  if (tinh) {
+    data = data.filter((item) => tinh.find((q) => parseString(q) === parseString(item.get('tinh'))));
+  }
+  if (huyen) {
+    data = data.filter((item) => huyen.find((q) => parseString(q) === parseString(item.get('huyen'))));
+  }
+  if (dien_tich) {
+    data = data.filter((item) => parseString(item.get('dien_tich')) === parseString(dien_tich));
+  }
+
+  if (min_gia) {
+    data = data.filter((item) => {
+      return parseNumber(item.get('gia')) >= parseFloat(min_gia);
+    });
+  }
+  if (max_gia) {
+    data = data.filter((item) => parseNumber(item.get('gia')) <= parseFloat(max_gia));
+  }
+
   return res.status(200).json({
     data: data.map((item) => ({
       ...item.toObject(),
