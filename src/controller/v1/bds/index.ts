@@ -7,7 +7,20 @@ import { parseNumber } from 'utils/parseNumber';
 import { parseString } from 'utils/parseString';
 import size from 'lodash/size';
 export async function getLitsBDS(req, res, next) {
-  const { tieu_de, loai_hinh_bds, loai_hinh_kinh_doanh, quan, tinh, huyen, min_gia, max_gia, dien_tich, offset, limit, huong } = req.query;
+  const {
+    tieu_de,
+    loai_hinh_bds,
+    loai_hinh_kinh_doanh,
+    quan,
+    tinh,
+    huyen,
+    min_gia,
+    max_gia,
+    dien_tich,
+    offset,
+    limit,
+    huong,
+  } = req.query;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
@@ -26,14 +39,11 @@ export async function getLitsBDS(req, res, next) {
     }
 
     if (loai_hinh_bds) {
-      data = data.filter(() => loai_hinh_bds.find((item) => parseString(item) === parseString(item.get('loai_hinh_bds'))));
+      data = data.filter(() =>
+        loai_hinh_bds.find((item) => parseString(item) === parseString(item.get('loai_hinh_bds'))),
+      );
     }
-    if (huong) {
-      data = data.filter(() => loai_hinh_bds.find((item) => parseString(item) === parseString(item.get('huong'))));
-    }
-    if (loai_hinh_kinh_doanh) {
-      data = data.filter((item) => parseString(item.get('loai_hinh_kinh_doanh')) === parseString(loai_hinh_kinh_doanh));
-    }
+
     if (quan) {
       data = data.filter(() => quan.find((item) => parseString(item) === parseString(item.get('quan'))));
     }
@@ -71,7 +81,19 @@ export async function getLitsBDS(req, res, next) {
 }
 
 export async function getLitsBDSFilter(req, res, next) {
-  const { tieu_de, loai_hinh_bds, quan, tinh, huyen, min_gia, max_gia, dien_tich } = req.body;
+  const {
+    tieu_de,
+    loai_hinh_bds,
+    quan,
+    tinh,
+    huyen,
+    min_gia,
+    max_gia,
+    dien_tich,
+    huong,
+    loai_hinh_kinh_doanh,
+    duong_truoc_nha,
+  } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
@@ -86,6 +108,16 @@ export async function getLitsBDSFilter(req, res, next) {
     console.log('data', data);
 
     data = fullTextSearch(array, tieu_de, 'tieu_de');
+  }
+  if (size(huong)) {
+    data = data.filter((item) => huong.find((q) => parseString(q) === parseString(item.get('huong'))));
+  }
+
+  if (size(duong_truoc_nha)) {
+    data = data.filter((item) => duong_truoc_nha.find((q) => parseString(q) === parseString(item.get('duong_truoc_nha'))));
+  }
+  if (loai_hinh_kinh_doanh) {
+    data = data.filter((item) => parseString(item.get('loai_hinh_kinh_doanh')) === parseString(loai_hinh_kinh_doanh));
   }
 
   if (size(quan)) {
@@ -106,7 +138,6 @@ export async function getLitsBDSFilter(req, res, next) {
   }
 
   if (min_gia) {
-    console.log('parseFloat(min_gia)', parseFloat(min_gia));
     data = data.filter((item) => {
       console.log('first', parseNumber(item.get('gia')) >= parseFloat(min_gia));
       return parseNumber(item.get('gia')) >= parseFloat(min_gia);
