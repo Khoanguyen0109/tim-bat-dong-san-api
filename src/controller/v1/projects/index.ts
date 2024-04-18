@@ -4,7 +4,7 @@ import { getDoc } from 'services/sheet';
 
 export async function getProjects(req, res, next) {
   const sheet = (await getDoc('du_an')) as GoogleSpreadsheetWorksheet;
-  const data = await sheet.getRows();
+  const data = (await sheet.getRows()).filter((item) => item.get('hien') === 'TRUE');
   return res.status(200).json({
     data: data.map((item) => ({
       ...item.toObject(),

@@ -32,7 +32,7 @@ export async function getLitsBDS(req, res, next) {
   if (isNumber(offset) && isNumber(limit)) {
     data = await sheet.getRows({ offset: offset, limit: limit });
   } else {
-    const array = await sheet.getRows();
+    const array = (await sheet.getRows()).filter((item) => item.get('hien') === 'TRUE');
     data = array;
     if (tieu_de) {
       data = fullTextSearch(array, tieu_de, 'tieu_de');
@@ -114,7 +114,9 @@ export async function getLitsBDSFilter(req, res, next) {
   }
 
   if (size(duong_truoc_nha)) {
-    data = data.filter((item) => duong_truoc_nha.find((q) => parseString(q) === parseString(item.get('duong_truoc_nha'))));
+    data = data.filter((item) =>
+      duong_truoc_nha.find((q) => parseString(q) === parseString(item.get('duong_truoc_nha'))),
+    );
   }
   if (loai_hinh_kinh_doanh) {
     data = data.filter((item) => parseString(item.get('loai_hinh_kinh_doanh')) === parseString(loai_hinh_kinh_doanh));
